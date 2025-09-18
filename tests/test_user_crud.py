@@ -1,15 +1,16 @@
 from contextlib import contextmanager
 from typing import Generator
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
-from sqlalchemy.pool import StaticPool
 import pytest
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.pool import StaticPool
 
-from app.models.base import Base
 from app.crud import user as user_crud
+
 # ensure models are registered
 from app.models import user as _user  # noqa: F401
+from app.models.base import Base
 
 
 @contextmanager

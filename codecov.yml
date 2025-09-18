@@ -1,0 +1,24 @@
+coverage:
+  status:
+    project:
+      default:
+        target: 0.80   # minimum overall coverage %80
+        threshold: 0.02 # %2 tolerans
+        if_no_baseline: warn
+    patch:
+      default:
+        target: 0.80   # değişikliklerde minimum %80
+        threshold: 0.02
+        if_no_baseline: warn
+
+codecov:
+  require_ci_to_pass: true
+
+comment:
+  layout: "reach, diff, flags, files"
+  behavior: default
+  require_changes: false
+
+ignore:
+  - "alembic/**"
+  - "tests/**"

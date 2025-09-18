@@ -3,23 +3,24 @@ from typing import Generator
 
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import StaticPool
 
-from app.main import app
 from app.deps import get_db
-from app.models.base import Base
+from app.main import app
+
 # Import all models so SQLAlchemy mappers are registered before create_all
-from app.models import user as _user  # noqa: F401
-from app.models import organization as _organization  # noqa: F401
-from app.models import org_user as _org_user  # noqa: F401
 from app.models import address as _address  # noqa: F401
-from app.models import vehicle as _vehicle  # noqa: F401
 from app.models import load as _load  # noqa: F401
-from app.models import offer as _offer  # noqa: F401
 from app.models import match as _match  # noqa: F401
-from app.models import rating as _rating  # noqa: F401
 from app.models import membership as _membership  # noqa: F401
+from app.models import offer as _offer  # noqa: F401
+from app.models import org_user as _org_user  # noqa: F401
+from app.models import organization as _organization  # noqa: F401
+from app.models import rating as _rating  # noqa: F401
+from app.models import user as _user  # noqa: F401
+from app.models import vehicle as _vehicle  # noqa: F401
+from app.models.base import Base
 
 
 def _setup_test_db():

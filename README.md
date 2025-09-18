@@ -1,9 +1,9 @@
 # Nakliye Platformu — Backend Başlangıç
 
-![CI](https://img.shields.io/github/actions/workflow/status/OWNER/REPO/ci.yml?branch=main)
-[![codecov](https://codecov.io/gh/OWNER/REPO/branch/main/graph/badge.svg)](https://codecov.io/gh/OWNER/REPO)
+![CI](https://img.shields.io/github/actions/workflow/status/onkaraman-0909/naknak/ci.yml?branch=main)
+[![codecov](https://codecov.io/gh/onkaraman-0909/naknak/branch/main/graph/badge.svg)](https://codecov.io/gh/onkaraman-0909/naknak)
 
-Not: Üstteki rozetin doğru çalışması için `OWNER/REPO` kısmını kendi GitHub depo yolunuzla değiştirin (örn. `onkar/nakliye-backend`).
+Not: Rozetler `onkaraman-0909/naknak` deposuna göre yapılandırıldı.
 
 ## Hızlı Başlangıç
 
@@ -56,4 +56,3 @@ pytest -q --cov=app --cov-report=term-missing --cov-report=xml
   - `alembic upgrade head`
   - `pytest` (coverage ile)
 - `coverage.xml` artifact olarak yüklenir
-

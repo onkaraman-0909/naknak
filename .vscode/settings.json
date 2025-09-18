@@ -13,5 +13,16 @@
         "."
     ],
     "python.envFile": "${workspaceFolder}/.env",
-    "terminal.integrated.defaultProfile.windows": "PowerShell"
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit",
+        "source.fixAll": "explicit"
+    },
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
+    "isort.args": ["--profile=black"],
+    "ruff.args": ["--fix"],
+    "ruff.lint.args": ["--fix"]
 }

@@ -1,5 +1,7 @@
-from pydantic_settings import BaseSettings, SettingsConfigDict
 from functools import lru_cache
+
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
 
 class Settings(BaseSettings):
     ENV: str = "local"
@@ -11,8 +13,10 @@ class Settings(BaseSettings):
     # Pydantic v2 style config
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
+
 @lru_cache(maxsize=1)
 def get_settings() -> "Settings":
     return Settings()
+
 
 settings = get_settings()

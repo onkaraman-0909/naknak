@@ -1,5 +1,7 @@
 from __future__ import annotations
+
 from typing import Optional
+
 from sqlalchemy import ForeignKey, SmallInteger
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -7,9 +9,15 @@ from .base import Base, PKMixin, TimestampMixin
 
 
 class Rating(PKMixin, TimestampMixin, Base):
-    rater_user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False, index=True)
-    ratee_user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False, index=True)
-    match_id: Mapped[int] = mapped_column(ForeignKey("match.id"), nullable=False, index=True)
+    rater_user_id: Mapped[int] = mapped_column(
+        ForeignKey("user.id"), nullable=False, index=True
+    )
+    ratee_user_id: Mapped[int] = mapped_column(
+        ForeignKey("user.id"), nullable=False, index=True
+    )
+    match_id: Mapped[int] = mapped_column(
+        ForeignKey("match.id"), nullable=False, index=True
+    )
 
     q1: Mapped[int] = mapped_column(SmallInteger, nullable=False)
     q2: Mapped[int] = mapped_column(SmallInteger, nullable=False)

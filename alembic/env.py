@@ -1,8 +1,11 @@
-from logging.config import fileConfig
-from sqlalchemy import engine_from_config, pool
-from alembic import context
+# ruff: noqa: E402  # Alembic env dosyasında config ayarı sonrası importlar kasıtlı
 import os
+from logging.config import fileConfig
+
 from dotenv import load_dotenv
+from sqlalchemy import engine_from_config, pool
+
+from alembic import context
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -20,20 +23,22 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 if DATABASE_URL:
     config.set_main_option("sqlalchemy.url", DATABASE_URL)
 
+import app.models.address  # noqa: F401
+import app.models.load  # noqa: F401
+import app.models.match  # noqa: F401
+import app.models.membership  # noqa: F401
+import app.models.offer  # noqa: F401
+import app.models.org_user  # noqa: F401
+import app.models.organization  # noqa: F401
+import app.models.rating  # noqa: F401
+import app.models.user  # noqa: F401
+import app.models.vehicle  # noqa: F401
+
 # Import application models so that Base.metadata includes all tables
 from app.models.base import Base  # type: ignore
-import app.models.user  # noqa: F401
-import app.models.organization  # noqa: F401
-import app.models.org_user  # noqa: F401
-import app.models.address  # noqa: F401
-import app.models.vehicle  # noqa: F401
-import app.models.load  # noqa: F401
-import app.models.offer  # noqa: F401
-import app.models.match  # noqa: F401
-import app.models.rating  # noqa: F401
-import app.models.membership  # noqa: F401
 
 target_metadata = Base.metadata
+
 
 def run_migrations_offline():
     url = config.get_main_option("sqlalchemy.url")

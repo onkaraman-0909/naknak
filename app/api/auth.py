@@ -1,11 +1,12 @@
 from __future__ import annotations
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.deps import get_db
-from app.schemas.auth import RegisterRequest, LoginRequest, TokenResponse, UserOut
 from app.crud import user as user_crud
-from app.security import verify_password, create_access_token, create_refresh_token
+from app.deps import get_db
+from app.schemas.auth import LoginRequest, RegisterRequest, TokenResponse, UserOut
+from app.security import create_access_token, create_refresh_token, verify_password
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -14,7 +15,9 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 def register(payload: RegisterRequest, db: Session = Depends(get_db)) -> UserOut:
     existing = user_crud.get_by_email(db, payload.email)
     if existing:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="E-posta zaten kayıtlı")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="E-posta zaten kayıtlı"
+        )
     created = user_crud.create(
         db,
         email=payload.email,
@@ -29,7 +32,9 @@ def register(payload: RegisterRequest, db: Session = Depends(get_db)) -> UserOut
 def login(payload: LoginRequest, db: Session = Depends(get_db)) -> TokenResponse:
     u = user_crud.get_by_email(db, payload.email)
     if not u or not verify_password(payload.password, u.password_hash):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Geçersiz kimlik bilgileri")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Geçersiz kimlik bilgileri"
+        )
     access = create_access_token(str(u.id))
     refresh = create_refresh_token(str(u.id))
     return TokenResponse(access_token=access, refresh_token=refresh)

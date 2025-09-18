@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict
 
@@ -26,12 +27,18 @@ def _create_token(subject: str, expires_delta: timedelta, token_type: str) -> st
         "iat": int(now.timestamp()),
         "exp": int((now + expires_delta).timestamp()),
     }
-    return jwt.encode(to_encode, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM)
+    return jwt.encode(
+        to_encode, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM
+    )
 
 
 def create_access_token(subject: str) -> str:
-    return _create_token(subject, timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES), "access")
+    return _create_token(
+        subject, timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES), "access"
+    )
 
 
 def create_refresh_token(subject: str) -> str:
-    return _create_token(subject, timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES), "refresh")
+    return _create_token(
+        subject, timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES), "refresh"
+    )

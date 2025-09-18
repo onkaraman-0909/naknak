@@ -1,0 +1,75 @@
+:root{
+  --brand-color: #0ea5e9; /* sky-500 */
+}
+
+html, body {
+  background: #0b1220; /* dark background */
+  color: #e5e7eb; /* text-gray-200 */
+}
+
+.swagger-ui .topbar {
+  background-color: transparent;
+  padding: 16px 0;
+}
+
+.swagger-ui .topbar .download-url-wrapper,
+.swagger-ui .topbar .download-url-wrapper input[type=text],
+.swagger-ui .topbar .download-url-wrapper .download-url-button {
+  display: none !important;
+}
+
+.swagger-ui .topbar-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Brand title */
+.swagger-ui .topbar-wrapper .link span {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--brand-color);
+}
+
+/* Cards and sections */
+.swagger-ui .opblock-tag {
+  color: #93c5fd; /* text-sky-300 */
+}
+.swagger-ui .opblock-tag small {
+  color: #7dd3fc; /* sky-300 */
+}
+
+.swagger-ui .opblock.opblock-get { border-color: #22c55e; }
+.swagger-ui .opblock.opblock-post { border-color: #0ea5e9; }
+.swagger-ui .opblock.opblock-delete { border-color: #f43f5e; }
+.swagger-ui .opblock.opblock-put { border-color: #eab308; }
+
+.swagger-ui .info .title {
+  color: #e5e7eb;
+}
+.swagger-ui .info .base-url {
+  color: #a3a3a3;
+}
+
+/* Buttons */
+.swagger-ui .btn {
+  background: #111827; /* gray-900 */
+  border: 1px solid #374151; /* gray-700 */
+  color: #e5e7eb;
+}
+.swagger-ui .btn.authorize,
+.swagger-ui .auth-container .authorize {
+  background: var(--brand-color);
+  border: 1px solid var(--brand-color);
+  color: #081018;
+}
+
+/* Schemas */
+.swagger-ui section.models .model-container {
+  background: #0f172a; /* slate-900 */
+}
+.swagger-ui .model-title,
+.swagger-ui .model-box .prop-type,
+.swagger-ui .model .property.primitive .prop-type {
+  color: #cbd5e1; /* slate-300 */
+}

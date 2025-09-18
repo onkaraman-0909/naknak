@@ -1,4 +1,4 @@
-# Nakliye Platformu — Backend Başlangıç
+# F4ST — Backend API
 ## Docker ile Çalıştırma
 
 Yerelde Docker imajı oluşturma:
@@ -30,6 +30,60 @@ docker compose run --rm tests
 Notlar:
 - Compose ortamında API `DATABASE_URL` içinde `db` servisini host olarak kullanır: `postgresql+psycopg://postgres:postgres@db:5432/nakliye`.
 - `.env` dosyası konteynere read-only mount edilir; gizli değerleri depoya koymayın.
+
+
+## Ortam Değişkenleri (.env)
+
+Aşağıdaki anahtarlar `app/config.py` içinde okunur ve uygulamada kullanılır.
+
+- `ENV`:
+  - Değerler: `local`, `staging`, `prod`
+  - OpenAPI `servers` sıralamasını belirler.
+- `DATABASE_URL`:
+  - Örnek: `postgresql+psycopg://postgres:postgres@localhost:5432/nakliye`
+- `JWT_SECRET_KEY`, `JWT_ALGORITHM`, `ACCESS_TOKEN_EXPIRE_MINUTES`, `REFRESH_TOKEN_EXPIRE_MINUTES`
+- `PROD_API_URL`, `STAGING_API_URL`, `LOCAL_API_URL`:
+  - OpenAPI `servers` bölümüne dinamik olarak eklenir (bkz. `app/main.py -> custom_openapi`).
+
+Örnek dosya: `.env.example`
+
+
+## Listeleme — Sayfalama ve Filtreleme
+
+Liste uç noktalarında basit sayfalama ve (uygunsa) filtre desteği bulunur. Aşağıdaki örneklerde Bearer access token ile yetkili olduğun varsayılır.
+
+- `GET /orgs/`
+  - Sorgu parametreleri: `limit`, `offset`
+  - Örnek:
+    ```http
+    GET /orgs/?limit=10&offset=20
+    Authorization: Bearer <ACCESS_TOKEN>
+    ```
+
+- `GET /vehicles/`
+  - Sorgu parametreleri: `organization_id`, `limit`, `offset`
+  - Örnekler:
+    ```http
+    # Sadece belirli organizasyona ait araçlar
+    GET /vehicles/?organization_id=3
+    Authorization: Bearer <ACCESS_TOKEN>
+
+    # Sadece ilk kaydı al
+    GET /vehicles/?limit=1
+    Authorization: Bearer <ACCESS_TOKEN>
+    ```
+
+- `GET /loads/`
+  - Sorgu parametreleri: `organization_id`, `limit`, `offset`
+  - Örnekler:
+    ```http
+    GET /loads/?organization_id=5&limit=5&offset=5
+    Authorization: Bearer <ACCESS_TOKEN>
+    ```
+
+Notlar
+- `limit` ve `offset` sıfırdan büyük sayılar olmalıdır.
+- `organization_id` belirtilirse, ilgili organizasyon için RBAC kuralları geçerlidir; admin olmayanlar yetkisizse 403 dönebilir.
 
 
 ![CI](https://img.shields.io/github/actions/workflow/status/onkaraman-0909/naknak/ci.yml?branch=main)

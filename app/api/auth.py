@@ -22,7 +22,21 @@ from app.security import (
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
-@router.post("/register", response_model=UserOut, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/register",
+    response_model=UserOut,
+    status_code=status.HTTP_201_CREATED,
+    summary="Yeni kullanıcı kaydı",
+    description="E-posta ve parola ile yeni kullanıcı oluşturur. E-posta benzersiz olmalıdır.",
+    responses={
+        400: {
+            "description": "E-posta zaten kayıtlı",
+            "content": {
+                "application/json": {"example": {"detail": "E-posta zaten kayıtlı"}}
+            },
+        }
+    },
+)
 def register(payload: RegisterRequest, db: Session = Depends(get_db)) -> UserOut:
     existing = user_crud.get_by_email(db, payload.email)
     if existing:
@@ -39,7 +53,20 @@ def register(payload: RegisterRequest, db: Session = Depends(get_db)) -> UserOut
     return created  # Pydantic from_attributes ile serialize edilir
 
 
-@router.post("/login", response_model=TokenResponse)
+@router.post(
+    "/login",
+    response_model=TokenResponse,
+    summary="Kullanıcı girişi",
+    description="Geçerli kimlik bilgileri ile access ve refresh token üretir.",
+    responses={
+        401: {
+            "description": "Geçersiz kimlik bilgileri",
+            "content": {
+                "application/json": {"example": {"detail": "Geçersiz kimlik bilgileri"}}
+            },
+        }
+    },
+)
 def login(payload: LoginRequest, db: Session = Depends(get_db)) -> TokenResponse:
     u = user_crud.get_by_email(db, payload.email)
     if not u or not verify_password(payload.password, u.password_hash):
@@ -51,7 +78,22 @@ def login(payload: LoginRequest, db: Session = Depends(get_db)) -> TokenResponse
     return TokenResponse(access_token=access, refresh_token=refresh)
 
 
-@router.post("/refresh", response_model=TokenResponse)
+@router.post(
+    "/refresh",
+    response_model=TokenResponse,
+    summary="Token yenileme",
+    description="Geçerli bir refresh token verildiğinde yeni access ve refresh token çifti döner.",
+    responses={
+        401: {
+            "description": "Geçersiz veya süresi dolmuş token",
+            "content": {
+                "application/json": {
+                    "example": {"detail": "Geçersiz veya süresi dolmuş token"}
+                }
+            },
+        }
+    },
+)
 def refresh(payload: RefreshRequest) -> TokenResponse:
     # verify refresh token and issue a new access/refresh pair
     user_id = get_subject_from_token(payload.refresh_token, expected_type="refresh")
@@ -60,6 +102,21 @@ def refresh(payload: RefreshRequest) -> TokenResponse:
     return TokenResponse(access_token=access, refresh_token=refresh)
 
 
-@router.get("/me", response_model=UserOut)
+@router.get(
+    "/me",
+    response_model=UserOut,
+    summary="Oturum açan kullanıcı bilgisi",
+    description="Bearer access token ile kimliği doğrulanmış kullanıcının temel bilgilerini döner.",
+    responses={
+        401: {
+            "description": "Yetkisiz",
+            "content": {
+                "application/json": {
+                    "example": {"detail": "Geçersiz veya süresi dolmuş token"}
+                }
+            },
+        }
+    },
+)
 def me(current_user: UserOut = Depends(get_current_user)) -> UserOut:
     return current_user

@@ -28,3 +28,7 @@ class UserOut(BaseModel):
     locale: str | None
     # Pydantic v2: use ConfigDict instead of inner Config
     model_config = ConfigDict(from_attributes=True)
+
+
+class RefreshRequest(BaseModel):
+    refresh_token: str

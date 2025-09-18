@@ -30,3 +30,7 @@ def create(
     db.commit()
     db.refresh(user)
     return user
+
+
+def get(db: Session, user_id: int) -> Optional[User]:
+    return db.query(User).filter(User.id == user_id).first()

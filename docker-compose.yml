@@ -1,0 +1,59 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16
+    container_name: nakliye_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: nakliye
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  api:
+    build: .
+    container_name: nakliye_api
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ENV: local
+      JWT_SECRET_KEY: change-me
+      JWT_ALGORITHM: HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: 60
+      REFRESH_TOKEN_EXPIRE_MINUTES: 10080
+      DATABASE_URL: postgresql+psycopg://postgres:postgres@db:5432/nakliye
+    ports:
+      - "8000:8000"
+    command: ["sh", "-c", "alembic upgrade head && python -m uvicorn app.main:app --host 0.0.0.0 --port 8000"]
+    volumes:
+      - ./.env:/app/.env:ro
+
+  tests:
+    build: .
+    container_name: nakliye_tests
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ENV: local
+      JWT_SECRET_KEY: change-me
+      JWT_ALGORITHM: HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: 60
+      REFRESH_TOKEN_EXPIRE_MINUTES: 10080
+      DATABASE_URL: postgresql+psycopg://postgres:postgres@db:5432/nakliye
+    command: ["sh", "-c", "alembic upgrade head && pytest -q"]
+    volumes:
+      - ./.env:/app/.env:ro
+      - ./:/app
+
+volumes:
+  pgdata:

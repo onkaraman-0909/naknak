@@ -42,3 +42,20 @@ def create_refresh_token(subject: str) -> str:
     return _create_token(
         subject, timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES), "refresh"
     )
+
+
+def decode_token(token: str) -> Dict[str, Any]:
+    """Decode JWT and return payload without validation beyond signature/exp."""
+    return jwt.decode(
+        token, settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM]
+    )
+
+
+def get_subject_from_token(token: str, *, expected_type: str | None = None) -> str:
+    payload = decode_token(token)
+    if expected_type and payload.get("type") != expected_type:
+        raise ValueError("Invalid token type")
+    sub = payload.get("sub")
+    if not isinstance(sub, str) or not sub:
+        raise ValueError("Invalid token subject")
+    return sub

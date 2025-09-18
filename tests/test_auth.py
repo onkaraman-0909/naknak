@@ -102,3 +102,29 @@ def test_login_invalid_credentials():
     res = client.post("/auth/login", json={"email": email, "password": "wrong"})
     assert res.status_code == 401
     assert "geçersiz" in res.json().get("detail", "").lower()
+
+
+def test_refresh_and_me_flow():
+    # register and login
+    email = "flow@example.com"
+    password = "secret123"
+    r = client.post("/auth/register", json={"email": email, "password": password})
+    assert r.status_code == 201
+    login = client.post("/auth/login", json={"email": email, "password": password})
+    assert login.status_code == 200
+    tokens = login.json()
+
+    # call /auth/me with access token
+    headers = {"Authorization": f"Bearer {tokens['access_token']}"}
+    me = client.get("/auth/me", headers=headers)
+    assert me.status_code == 200
+    me_data = me.json()
+    assert me_data["email"] == email
+
+    # refresh tokens
+    refresh = client.post(
+        "/auth/refresh", json={"refresh_token": tokens["refresh_token"]}
+    )
+    assert refresh.status_code == 200
+    new_tokens = refresh.json()
+    assert new_tokens["access_token"] and new_tokens["refresh_token"]

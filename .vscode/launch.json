@@ -1,0 +1,52 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "FastAPI (Uvicorn) - 8001",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "uvicorn",
+            "justMyCode": true,
+            "args": [
+                "app.main:app",
+                "--reload",
+                "--port",
+                "8001"
+            ],
+            "cwd": "${workspaceFolder}",
+            "envFile": "${workspaceFolder}/.env",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "FastAPI (Uvicorn) - 8000",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "uvicorn",
+            "justMyCode": true,
+            "args": [
+                "app.main:app",
+                "--reload",
+                "--port",
+                "8000"
+            ],
+            "cwd": "${workspaceFolder}",
+            "envFile": "${workspaceFolder}/.env",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "PyTest (Tüm testler)",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "pytest",
+            "args": [
+                "-q"
+            ],
+            "cwd": "${workspaceFolder}",
+            "envFile": "${workspaceFolder}/.env",
+            "console": "integratedTerminal"
+        }
+    ]
+}

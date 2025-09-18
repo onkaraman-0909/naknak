@@ -1,0 +1,59 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Install deps (pip)",
+      "type": "shell",
+      "command": "py -m pip install --upgrade pip; py -m pip install -r requirements.txt",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run Uvicorn (8001)",
+      "type": "shell",
+      "command": "py -m uvicorn app.main:app --reload --port 8001",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run Uvicorn (8000)",
+      "type": "shell",
+      "command": "py -m uvicorn app.main:app --reload --port 8000",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run Tests (pytest)",
+      "type": "shell",
+      "command": "py -m pytest -q",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Alembic upgrade head",
+      "type": "shell",
+      "command": "py -m alembic upgrade head",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Alembic revision --autogenerate",
+      "type": "shell",
+      "command": "py -m alembic revision --autogenerate -m \"auto\"",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    }
+  ]
+}

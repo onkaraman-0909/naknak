@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: nakliye
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 6
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12", "3.13"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest-cov
+
+      - name: Run tests (with coverage)
+        env:
+          # İstersen buraya CI ortamında kullanılacak .env değişkenlerini ekleyebilirsin
+          ENV: local
+          JWT_SECRET_KEY: change-me
+          JWT_ALGORITHM: HS256
+          ACCESS_TOKEN_EXPIRE_MINUTES: 60
+          REFRESH_TOKEN_EXPIRE_MINUTES: 10080
+          DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/nakliye
+        run: |
+          alembic upgrade head
+          pytest
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage.xml
+          flags: py${{ matrix.python-version }}
+          fail_ci_if_error: true
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-xml
+          path: coverage.xml
